@@ -1,0 +1,4 @@
+# Allow kernel/WMT to search mnt_vendor during firmware load
+#allow kernel mnt_vendor_file:dir search;
+allow kernel vendor_file:dir search;
+allow kernel vendor_file:file { read open };

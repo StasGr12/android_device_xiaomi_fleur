@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<permissions>
+    <feature name="com.google.android.feature.ZERO_TOUCH" />
+    <feature name="android.hardware.bluetooth_le" />
+    <feature name="android.hardware.wifi.direct" />
+</permissions>

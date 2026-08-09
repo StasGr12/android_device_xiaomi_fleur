@@ -4,4 +4,4 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/lineage_fleur.mk
+    $(LOCAL_DIR)/infinity_fleur.mk

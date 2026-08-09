@@ -5,6 +5,11 @@
 
 DEVICE_PATH := device/xiaomi/fleur
 
+# MediaTek GPU Extensions & KPI Support
+BOARD_USES_MTK_HARDWARE := true
+BOARD_USES_GPU_MALI := true
+TARGET_BOARD_PLATFORM := mt6781
+
 # Enable 64-bit for non-zygote.
 ZYGOTE_FORCE_64 := true
 

@@ -20,6 +20,7 @@ on post-fs-data
     mkdir /data/vendor/wifi 0771 wifi wifi
     mkdir /data/vendor/wifi/wpa 0770 wifi wifi
     mkdir /data/vendor/wifi/wpa/sockets 0770 wifi wifi
+    symlink /vendor/etc/wifi/wifi.cfg /vendor/firmware/wifi.cfg
 
     # Bluetooth
     chown bluetooth bluetooth /dev/ttyGS2

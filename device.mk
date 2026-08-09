@@ -4,6 +4,43 @@
 #
 
 DEVICE_PATH := device/xiaomi/fleur
+INFINITY_MAINTAINER := "StasGr12"
+TARGET_HAS_UDFPS := false
+WITH_GAPPS := true
+
+# IMS
+$(call inherit-product, vendor/mediatek/ims/ims.mk)
+
+# Viper4FX
+PRODUCT_PACKAGES += \
+    ViPER4AndroidFX \
+    libv4a_fx_32 \
+    libv4a_fx_64
+
+# Quick Share
+PRODUCT_COPY_FILES += \
+    device/xiaomi/fleur/quick_share.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/quick_share.xml
+PRODUCT_PACKAGES += \
+    com.google.android.nearby.halfsheet \
+    PixelSharesheet \
+    FrameworksServicesNearbyJetpack
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.bluetooth.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth.xml \
+    frameworks/native/data/etc/android.hardware.bluetooth_le.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth_le.xml \
+    frameworks/native/data/etc/android.hardware.wifi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.xml \
+    vendor/google/gms/permissions/com.google.android.nearby.sharing.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/com.google.android.nearby.sharing.xml
+
+# Enable MTK Power and Performance hint hooks
+TARGET_TAP_HINT_ENABLED := true
+MTK_POWER_HINTS := true
+
+# MIUI Camera
+PRODUCT_PACKAGES += \
+    MIUICamera \
+    MiuiExtraPhoto \
+    privapp-permissions-miuicamera.xml \
+    miuicamera-hiddenapi-package-whitelist.xml \
+    sceneDetection.xml
 
 # Dalvik
 $(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)

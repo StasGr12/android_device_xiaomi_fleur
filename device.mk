@@ -13,10 +13,7 @@ TARGET_TAP_HINT_ENABLED := true
 MTK_POWER_HINTS := true
 
 # Viper4FX
-PRODUCT_PACKAGES += \
-    ViPER4AndroidFX \
-    libv4a_fx_32 \
-    libv4a_fx_64
+$(call inherit-product, packages/apps/ViPER4AndroidFX/viper4fx.mk)
 
 # Quick Share
 PRODUCT_COPY_FILES += \

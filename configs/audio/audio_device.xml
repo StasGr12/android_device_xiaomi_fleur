@@ -27,9 +27,13 @@
         <path name="receiver_output" value="turnon">
             <kctl name="DAC In Mux" value="Normal Path" />
             <kctl name="RCV Mux" value="Voice Playback" />
-            <kctl name="RCV_AMP_MODE" value="RECIEVER_MODE" />
+            <kctl name="Handset_PGA_GAIN" value="0" />
+            <kctl name="ADDA_DL_CH1 GAIN1_OUT_CH1" value="1" />
+            <kctl name="ADDA_DL_CH2 GAIN1_OUT_CH2" value="1" />
+            <kctl name="ADDA_DL_GAIN" value="65535" />
+            <kctl name="RCV_AMP_MODE" value="3" />
             <kctl name="Ext_Reciver_Amp Switch" value="1" />
-	    <kctl name="SpkrLeft Sia81xx Audio Scene" value="Receiver" />
+            <kctl name="SpkrLeft Sia81xx Audio Scene" value="Voice" />
             <kctl name="SpkrLeft Sia81xx Power" value="On" />
         </path>
         <path name="receiver_output" value="turnoff">
@@ -1172,6 +1176,10 @@
             <kctl name="PGA R Mux" value="None" />
         </path>
         <path name="MD1_TO_CAPTURE2" value="turnon">
+            <kctl name="ADDA_DL_CH1 GAIN1_OUT_CH1" value="1" />
+            <kctl name="ADDA_DL_CH2 GAIN1_OUT_CH2" value="1" />
+            <kctl name="HW Gain 1" value="1048576" />
+            <kctl name="RCV_AMP_MODE" value="3" />
             <kctl name="UL2_CH1 PCM_2_CAP_CH1" value="1" />
             <kctl name="UL2_CH2 PCM_2_CAP_CH1" value="1" />
         </path>
@@ -1188,6 +1196,8 @@
             <kctl name="UL2_CH2 PCM_1_CAP_CH1" value="0" />
         </path>
         <path name="PLAYBACK2_TO_MD1" value="turnon">
+            <kctl name="ADDA_DL_GAIN" value="65535" />
+            <kctl name="HW Gain 1" value="1048576" />
             <kctl name="PCM_2_PB_CH1 DL2_CH1" value="1" />
             <kctl name="PCM_2_PB_CH2 DL2_CH2" value="1" />
         </path>

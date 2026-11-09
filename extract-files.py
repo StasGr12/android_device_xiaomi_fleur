@@ -1,0 +1,126 @@
+#!/usr/bin/env -S PYTHONPATH=../../../tools/extract-utils python3
+#
+# SPDX-FileCopyrightText: 2024 The LineageOS Project
+# SPDX-License-Identifier: Apache-2.0
+#
+
+from extract_utils.fixups_blob import (
+    blob_fixup,
+    blob_fixups_user_type,
+)
+
+from extract_utils.fixups_lib import (
+    lib_fixup_remove,
+    lib_fixups,
+    lib_fixups_user_type,
+)
+
+from extract_utils.main import (
+    ExtractUtils,
+    ExtractUtilsModule,
+)
+
+import extract_utils.tools
+extract_utils.tools.DEFAULT_PATCHELF_VERSION = '0_17_2'
+
+namespace_imports = [
+    'device/xiaomi/fleur',
+    'hardware/mediatek',
+    'hardware/mediatek/libmtkperf_client',
+    'hardware/mediatek/libaedv',
+    'hardware/xiaomi',
+]
+
+def lib_fixup_vendor_suffix(lib: str, partition: str, *args, **kwargs):
+    return f'{lib}_{partition}' if partition == 'vendor' else None
+
+lib_fixups: lib_fixups_user_type = {
+    **lib_fixups,
+    (
+        'vendor.mediatek.hardware.videotelephony@1.0',
+    ): lib_fixup_vendor_suffix,
+}
+
+blob_fixups: blob_fixups_user_type = {
+    'system_ext/priv-app/ImsService/ImsService.apk': blob_fixup()
+        .apktool_patch('blob-patches'),
+    'system_ext/lib64/libimsma.so': blob_fixup()
+        .replace_needed('libsink.so', 'libsink-mtk.so'),
+    'system_ext/lib64/libsink-mtk.so': blob_fixup()
+        .add_needed('libaudioclient_shim.so'),
+    'vendor/etc/init/android.hardware.neuralnetworks@1.3-service-mtk-neuron.rc': blob_fixup()
+        .regex_replace('start', 'enable'),
+    'vendor/bin/mnld': blob_fixup()
+        .replace_needed('libsensorndkbridge.so', 'android.hardware.sensors@1.0-convert-shared.so')
+        .replace_needed('libmnl.so', 'libmnl_mtk.so'),
+    ('vendor/lib64/libaalservice.so', 'vendor/lib64/libcam.utils.sensorprovider.so', 'vendor/lib64/librgbwlightsensor.so'): blob_fixup()
+        .replace_needed('libsensorndkbridge.so', 'android.hardware.sensors@1.0-convert-shared.so'),
+    ('vendor/lib/libnvram.so', 'vendor/lib64/libnvram.so', 'vendor/lib64/libsysenv.so', 'vendor/bin/hw/android.hardware.neuralnetworks@1.3-service-mtk-neuron'): blob_fixup()
+        .add_needed('libbase_shim.so'),
+    ('vendor/lib64/hw/android.hardware.camera.provider@2.6-impl-mediatek.so', 'vendor/lib64/libmtkcam_stdutils.so'): blob_fixup()
+        .replace_needed('libutils.so', 'libutils-v32.so'),
+    ('vendor/lib/librt_extamp_intf.so', 'vendor/lib64/hw/vendor.mediatek.hardware.pq@2.15-impl.so'): blob_fixup()
+        .replace_needed('libtinyxml2.so', 'libtinyxml2-v34.so')
+        .replace_needed('libutils.so', 'libutils-v32.so'),
+    'vendor/bin/hw/mtkfusionrild': blob_fixup()
+        .add_needed('libutils-v32.so'),
+    ('vendor/lib64/hw/android.hardware.gnss-impl-mediatek.so', 'vendor/bin/hw/android.hardware.gnss-service.mediatek'): blob_fixup()
+        .replace_needed('android.hardware.gnss-V1-ndk_platform.so', 'android.hardware.gnss-V1-ndk.so'),
+    'vendor/lib/hw/audio.primary.mt6781.so': blob_fixup()
+        .replace_needed('libalsautils.so', 'libalsautils-stock.so')
+        .replace_needed('libtinyxml2.so', 'libtinyxml2-v34.so')
+        .binary_regex_replace(b'A2dpsuspendonly', b'A2dpSuspended\x00\x00')
+        .binary_regex_replace(b'BTAudiosuspend', b'A2dpSuspended\x00'),
+    'vendor/lib64/hw/hwcomposer.mtk_common.so': blob_fixup()
+        .add_needed('libprocessgroup_shim.so'),
+    'vendor/lib64/libvendor.goodix.hardware.biometrics.fingerprint@2.1.so': blob_fixup()
+        .replace_needed('libhidlbase.so', 'libhidlbase-v32.so'),
+    'vendor/lib64/libmnl_mtk.so': blob_fixup()
+        .fix_soname()
+        .add_needed('libcutils.so'),
+    ('vendor/lib64/libcodec2_mtk_vdec.so', 'vendor/lib64/libcodec2_mtk_venc.so'): blob_fixup()
+        .replace_needed('libformatter.so', 'libformatter_mtk.so'),
+    'vendor/lib64/libformatter_mtk.so': blob_fixup()
+        .fix_soname(),
+    (
+        'vendor/lib/libteei_daemon_vfs.so',
+        'vendor/lib64/libteei_daemon_vfs.so',
+        'vendor/lib64/libSQLiteModule_VER_ALL.so',
+        'vendor/lib64/lib3a.flash.so',
+        'vendor/lib64/lib3a.ae.stat.so',
+        'vendor/lib64/lib3a.sensors.color.so',
+        'vendor/lib64/lib3a.sensors.flicker.so',
+        'vendor/lib64/libaaa_ltm.so',
+    ): blob_fixup()
+        .add_needed('liblog.so'),
+    'vendor/lib64/libneuron_adapter_mgvi.so': blob_fixup()
+        .clear_symbol_version('AHardwareBuffer_allocate')
+        .clear_symbol_version('AHardwareBuffer_createFromHandle')
+        .clear_symbol_version('AHardwareBuffer_describe')
+        .clear_symbol_version('AHardwareBuffer_getNativeHandle')
+        .clear_symbol_version('AHardwareBuffer_lock')
+        .clear_symbol_version('AHardwareBuffer_release')
+        .clear_symbol_version('AHardwareBuffer_unlock'),
+    'vendor/lib64/libneuralnetworks_sl_driver_mtk_legacy_prebuilt.so': blob_fixup()
+        .clear_symbol_version('AHardwareBuffer_allocate')
+        .clear_symbol_version('AHardwareBuffer_createFromHandle')
+        .clear_symbol_version('AHardwareBuffer_describe')
+        .clear_symbol_version('AHardwareBuffer_getNativeHandle')
+        .clear_symbol_version('AHardwareBuffer_lock')
+        .clear_symbol_version('AHardwareBuffer_release')
+        .clear_symbol_version('AHardwareBuffer_unlock')
+        .add_needed('libbase_shim.so'),
+}  # fmt: skip
+
+module = ExtractUtilsModule(
+    'fleur',
+    'xiaomi',
+    blob_fixups=blob_fixups,
+    lib_fixups=lib_fixups,
+    namespace_imports=namespace_imports,
+    add_firmware_proprietary_file=True,
+)
+
+if __name__ == '__main__':
+    utils = ExtractUtils.device(module)
+    utils.run()

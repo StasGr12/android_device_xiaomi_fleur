@@ -1,50 +1,35 @@
 # Credit t.me/mars300809
 # 1. Fast Charging 33W (Xiaomi batterysecret: sysfs + sysfs_typec + sysfs_batteryinfo)
-allow batterysecret sysfs file { read write open getattr };
-allow batterysecret sysfs dir { read open search getattr };
-allow batterysecret sysfs lnk_file { read getattr };
-allow batterysecret sysfs_typec file { read write open getattr };
-allow batterysecret sysfs_typec dir { read open search getattr };
-allow batterysecret sysfs_typec lnk_file { read getattr };
-allow batterysecret sysfs_batteryinfo file { read write open getattr };
-allow batterysecret sysfs_batteryinfo dir { read open search getattr };
-allow batterysecret sysfs_batteryinfo lnk_file { read getattr };
+allow batterysecret sysfs:file { read write open getattr };
+allow batterysecret sysfs:dir { read open search getattr };
+allow batterysecret sysfs:lnk_file { read getattr };
+allow batterysecret sysfs_typec:file { read write open getattr };
+allow batterysecret sysfs_typec:dir { read open search getattr };
+allow batterysecret sysfs_typec:lnk_file { read getattr };
+allow batterysecret sysfs_batteryinfo:file { read write open getattr };
+allow batterysecret sysfs_batteryinfo:dir { read open search getattr };
+allow batterysecret sysfs_batteryinfo:lnk_file { read getattr };
 
 # 2. Vibrator (aw8622 / fleur)
-allow hal_vibrator_default sysfs file { read write open getattr };
+allow hal_vibrator_default sysfs:file { read write open getattr };
 
 # 3. Fingerprint (xiaomi)
-allow hal_fingerprint_default sysfs file { read write open getattr };
+allow hal_fingerprint_default sysfs:file { read write open getattr };
 
 # 4. Health / Battery & Deep Sleep
-allow hal_health_default sysfs file { read write open getattr };
-allow system_suspend sysfs file { read open getattr };
-allow system_suspend sysfs_batteryinfo file { read open getattr };
+allow hal_health_default sysfs:file { read write open getattr };
 
 # 5. Power / CPU Idle & Performance HAL
-allow hal_power_default sysfs file { read write open getattr };
+allow hal_power_default sysfs:file { read write open getattr };
 
 # 6. Display / HWC / SurfaceFlinger / GPU
-allow hal_graphics_composer_default sysfs file { read open getattr };
-allow surfaceflinger vendor_default_prop file { read open getattr map };
-allow gpuservice fs_bpf file { getattr };
+allow hal_graphics_composer_default sysfs:file { read open getattr };
+allow gpuservice fs_bpf:file { getattr };
 
 # 7. Camera HAL, Camera App & Media
-allow mtk_hal_camera default_prop file { read open getattr map };
-allow vendor_init default_prop property_service { set };
-allow mediacodeclist_generator vendor_default_prop file { read open getattr map };
-allow platform_app_36 vendor_camera_prop file { read open getattr map };
-allow platform_app_36 vendor_camera_persist_prop file { read open getattr map };
 
 # 8. Telephony / Modem / Proximity Calibration (NVRAM)
-allow rild default_prop file { read open getattr map };
-allow rild vendor_mtk_audio_prop property_service { set };
-allow ccci_rpcd default_prop file { read open getattr map };
-allow nvram_daemon persist_data_file file { read write open getattr append };
+allow nvram_daemon persist_data_file:file { read write open getattr append };
 
 # 9. System Server & System Apps
-allow system_server vendor_default_prop file { read open getattr map };
-allow system_app sysfs_zram file { read open getattr };
-allow platform_app_36 vendor_default_prop file { read open getattr map };
-allow priv_app_36 vendor_default_prop file { read open getattr map };
-allow platform_app usb_uvc_enabled_prop file { read open getattr map };
+allow system_app sysfs_zram:file { read open getattr };
